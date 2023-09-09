@@ -106,7 +106,6 @@ int main()
     FILE *CONTAS;
     CONTAS = NULL;
     int op, i = 0;
-    int ctExterno = 0;
 
     do
     {
