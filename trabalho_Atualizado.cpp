@@ -102,7 +102,7 @@ void adicionarConta(FILE *CONTAS, struct Contas conta[100], int i)
 
 int main()
 {
-    struct Contas conta[100];
+    struct Contas conta[MAX_CONTAS];
     FILE *CONTAS;
     CONTAS = NULL;
     int op, i = 0;
