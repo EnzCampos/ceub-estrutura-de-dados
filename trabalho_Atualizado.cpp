@@ -164,7 +164,7 @@ int main()
             printf("\nOperacao invalida!\n");
             break;
         }
-    } while (op != 4);
+    } while (op != 5);
 
     return 0;
 }
