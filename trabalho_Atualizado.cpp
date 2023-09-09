@@ -17,8 +17,9 @@ int menu()
     system("cls");
     printf("\n1)Adicionar nova conta");
     printf("\n2)Ler alguma conta");
-    printf("\n3)Ordenar as contas");
-    printf("\n4)Sair");
+    printf("\n3)Ordenar as contas (Selection Sort)");
+    printf("\n4)Ordenar as contas (Insertion Sort)");
+    printf("\n5)Sair");
     printf("\nEscolha uma operacao: ");
     scanf("%d", &op);
     getchar();
@@ -100,6 +101,32 @@ void adicionarConta(FILE *CONTAS, struct Contas conta[100], int i)
     fclose(CONTAS);
 }
 
+void lerContas(FILE *CONTAS)
+{
+    CONTAS = fopen("contas.txt", "r");
+
+    if (CONTAS == NULL)
+    {
+        printf("\nArquivo nao existe ou nao foi possivel abrir!");
+        return;
+    }
+
+    struct Contas conta;
+    int linha = 1;
+
+    while (fscanf(CONTAS, "%[^\n]\n%d\n%f\n", conta.nome, &conta.num, &conta.saldo) != EOF)
+    {
+        printf("\nConta %d:\n", linha);
+        printf("\nNome: %s\n", conta.nome);
+        printf("Numero: %d\n", conta.num);
+        printf("Saldo: %.2f\n", conta.saldo);
+        system("pause");
+        linha++;
+    }
+
+    fclose(CONTAS);
+}
+
 int main()
 {
     struct Contas conta[MAX_CONTAS];
@@ -120,12 +147,16 @@ int main()
             break;
 
         case 2:
+            lerContas(CONTAS);
             break;
 
         case 3:
             break;
 
         case 4:
+            break;
+
+        case 5:
             printf("\nSaindo...\n");
             break;
 
