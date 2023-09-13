@@ -32,7 +32,6 @@ int menu() /*Essa é a função do menu que será inicializada todas as vezes  a
 
 // Esta função conta o número de linhas em um arquivo, assumindo que cada linha é terminada por um caractere de nova linha ('\n').
 // Ela utiliza um ponteiro de arquivo (arquivoContas) para realizar essa contagem.
-
 int contaLinhas(FILE *arquivoContas)
 {
     char c;
@@ -56,7 +55,6 @@ int contaLinhas(FILE *arquivoContas)
 
 // Esta função permite adicionar uma nova conta bancária ao arquivo de contas, desde que o número máximo de contas (maxContas) não tenha sido atingido.
 // Ela recebe o número máximo de contas como argumento e permite ao usuário inserir os detalhes da conta.
-
 void adicionarConta(int maxContas)
 {
     int qtdContas = 0;
@@ -117,6 +115,7 @@ void lerContas(struct Contas conta[], int numContas)
     int i = 0;
 
     // Cabeçalho da tabela
+    //  Ele cria três colunas, cada uma com um espaço de largura específico (10, 20 e 10).
     printf("%-10s%-20s%-10s\n", "Conta", "Nome", "Saldo");
 
     while (fscanf(arquivoContas, "%[^\n]\n%d\n%f\n", conta[i].nome, &conta[i].num, &conta[i].saldo) != EOF)
@@ -133,115 +132,142 @@ void lerContas(struct Contas conta[], int numContas)
     fclose(arquivoContas);
 }
 
-// Esta função implementa o algoritmo de ordenação Insertion Sort para ordenar um array de contas bancárias com base nos números de conta.
-
+// Esta função implementa o algoritmo de ordenação Selection Sort para ordenar um array de contas bancárias com base nos números de conta.
 void selectionSort(struct Contas conta[], int numContas)
 {
-    printf("\nIniciando Insertion Sort\n");
+    printf("\nIniciando Selection Sort\n");
 
-    // Registra o tempo de início da ordenação.
     clock_t inicio = clock();
-    int i, j;
-    struct Contas chave;
 
-    int comparacoes = 0;
-    int movimentacoes = 0;
+    int i, j, minIndex;
+    struct Contas temp;
 
-    for (i = 1; i < numContas; i++)
+    long int comparacoes = numContas - 1;
+    long int movimentacoes = 0;
+    long int comparacoesEmMilhoes = 0;
+    long int movimentacoesEmMilhoes = 0;
+
+    for (i = 0; i < numContas - 1; i++) // Loop externo percorrendo o array.
     {
-        chave = conta[i];
-        j = i - 1;
+        minIndex = i; // Assume que o menor elemento é o primeiro.
 
-        while (j >= 0 && conta[j].saldo > chave.saldo)
+        for (j = i + 1; j < numContas; j++) // Loop interno a partir do próximo elemento.
         {
-            // Realiza a troca dos elementos quando necessário para ordenar.
-            conta[j + 1] = conta[j];
-            j = j - 1;
+            if (conta[j].num < conta[minIndex].num) // Compara o número da conta.
+            {
+                minIndex = j; // Atualiza o índice do menor elemento.
+            }
 
-            comparacoes++;
+            comparacoes++; // Incrementa o contador de comparações.
         }
 
-        conta[j + 1] = chave;
+        if (minIndex != i) // Se o menor elemento não é o atual.
+        {
+            temp = conta[minIndex]; // Realiza a troca usando variável temporária.
+            conta[minIndex] = conta[i];
+            conta[i] = temp;
 
-        // Verifica se houve movimentação de elementos no array.
-        if (j + 1 != i) {
-            movimentacoes++;
+            movimentacoes++; // Incrementa o contador de movimentações.
+        }
+
+        if (comparacoes > 1000000) {
+            comparacoesEmMilhoes++;
+            comparacoes -= 1000000;
+        }
+        if (movimentacoes > 1000000) {
+            movimentacoesEmMilhoes++;
+            movimentacoes -= 1000000;
         }
     }
 
-    // Correção para o melhor caso (quando não houve comparações nem movimentações).
-    if (comparacoes == 0 && movimentacoes == 0) {
-        comparacoes = numContas - 1;
-    }
-
-    // Registra o tempo de fim da ordenação.
     clock_t fim = clock();
     double tempo_gasto = (double)(fim - inicio) / CLOCKS_PER_SEC;
 
-    // Exibe informações sobre o desempenho do algoritmo de ordenação.
-    printf("\nInsertion Sort");
+    printf("\nSelection Sort");
     printf("\nTempo gasto: %.6f segundos", tempo_gasto);
-    printf("\nComparacoes: %d", comparacoes);
-    printf("\nMovimentacoes: %d\n", movimentacoes);
+    if (comparacoesEmMilhoes > 0) {
+        printf("\nComparacoes: %lu milhoes", comparacoesEmMilhoes);
+    } else {
+        printf("\nComparacoes: %lu", comparacoes);
+    }
+    if (movimentacoesEmMilhoes > 0) {
+        printf("\nMovimentacoes: %lu milhoes", movimentacoesEmMilhoes);
+    } else {
+        printf("\nMovimentacoes: %ld", movimentacoes);
+    }
 }
-
 
 // Esta função implementa o algoritmo de ordenação Insertion Sort para ordenar um array de contas bancárias com base nos números de conta.
-
 void insertionSort(struct Contas conta[], int numContas)
 {
+    // Iniciando a ordenação
     printf("\nIniciando Insertion Sort\n");
 
-    // Registra o tempo de início da ordenação.
-    clock_t inicio = clock();
+    clock_t inicio = clock();  // Marca o início do tempo de execução
     int i, j;
     struct Contas chave;
 
-    int comparacoes = 0;
-    int movimentacoes = 0;
+    long int comparacoes = 0;
+    long int movimentacoes = 0;
+
+    long int comparacoesEmMilhoes = 0;
+    long int movimentacoesEmMilhoes = 0;
 
     for (i = 1; i < numContas; i++)
     {
         chave = conta[i];
         j = i - 1;
 
+        // Move os elementos do array que são maiores que a chave para uma posição à frente de sua posição atual
         while (j >= 0 && conta[j].saldo > chave.saldo)
         {
-            // Realiza a troca dos elementos quando necessário para ordenar.
             conta[j + 1] = conta[j];
             j = j - 1;
 
             comparacoes++;
         }
 
-        conta[j + 1] = chave;
+        conta[j + 1] = chave; // Insere a chave na posição correta
 
-        // Verifica se houve movimentação de elementos no array.
         if (j + 1 != i) {
             movimentacoes++;
         }
+
+        // Verifica se as comparações ou movimentações ultrapassaram 1 milhão
+        if (comparacoes > 1000000) {
+            comparacoesEmMilhoes++;
+            comparacoes -= 1000000;  // Subtrai 1 milhão para manter o valor correto
+        }
+        if (movimentacoes > 1000000) {
+            movimentacoesEmMilhoes++;
+            movimentacoes -= 1000000;  // Subtrai 1 milhão para manter o valor correto
+        }
     }
 
-    // Correção para o melhor caso (quando não houve comparações nem movimentações).
+    // Para o melhor caso, o número de movimentações é 0 e o número de comparações é n - 1
     if (comparacoes == 0 && movimentacoes == 0) {
-        comparacoes = numContas - 1;
+        comparacoes = numContas - 1; 
     }
 
-    // Registra o tempo de fim da ordenação.
-    clock_t fim = clock();
+    clock_t fim = clock();  // Marca o fim do tempo de execução
     double tempo_gasto = (double)(fim - inicio) / CLOCKS_PER_SEC;
 
-    // Exibe informações sobre o desempenho do algoritmo de ordenação.
+    // Exibindo informações sobre a ordenação
     printf("\nInsertion Sort");
     printf("\nTempo gasto: %.6f segundos", tempo_gasto);
-    printf("\nComparacoes: %d", comparacoes);
-    printf("\nMovimentacoes: %d\n", movimentacoes);
+    if (comparacoesEmMilhoes > 0) {
+        printf("\nComparacoes: %lu milhoes", comparacoesEmMilhoes);
+    } else {
+        printf("\nComparacoes: %lu", comparacoes);
+    }
+    if (movimentacoesEmMilhoes > 0) {
+        printf("\nMovimentacoes: %lu milhoes\n", movimentacoesEmMilhoes);
+    } else {
+        printf("\nMovimentacoes: %ld\n", movimentacoes);
+    }
 }
 
-
-
 // Esta função recebe um array de estruturas "Contas", o número de contas no array e uma opção (op) que determina o tipo de ordenação a ser aplicada ao array.
-
 void ordenarContasArquivo(struct Contas conta[], int numContas, int op)
 {
     // Abre o arquivo "NOME_ARQUIVO" para leitura e escrita.
@@ -290,7 +316,6 @@ void ordenarContasArquivo(struct Contas conta[], int numContas, int op)
 
 // Esta função gera um conjunto de dados no formato de contas bancárias que representa o "pior caso".
 // No pior caso, os dados são gerados de forma ordenada em ordem decrescente de números de conta.
-
 void gerarPiorCaso(int numContas)
 {
     // Abre o arquivo "NOME_ARQUIVO" para escrita (sobrescreve o arquivo se já existir).
@@ -323,7 +348,6 @@ void gerarPiorCaso(int numContas)
 
 // Esta função gera um conjunto de dados no formato de contas bancárias que representa o "melhor caso".
 // No melhor caso, os dados são gerados de forma ordenada, com números de conta sequenciais.
-
 void gerarMelhorCaso(int numContas)
 {
     // Abre o arquivo "NOME_ARQUIVO" para escrita (sobrescreve o arquivo se já existir).
@@ -354,7 +378,6 @@ void gerarMelhorCaso(int numContas)
 }
 
 // Esta função gera um conjunto de dados no formato de contas bancárias de forma aleatória no que é considerado um "caso médio".
-
 void gerarCasoMedioAleatorio(int numContas)
 {
     // Abre o arquivo "NOME_ARQUIVO" para escrita (sobrescreve o arquivo se já existir).
@@ -392,7 +415,7 @@ void gerarCasoMedioAleatorio(int numContas)
     for (i = 0; i < numContas; i++)
     {
         char nomeConta[100];
-        sprintf(nomeConta, "Conta %d", numeros[i]);
+        sprintf(nomeConta, "Conta %d", numeros[i]); // Gera nomes de conta com base nos números de conta.
 
         // Gera números de conta, nomes e saldos aleatórios.
         fprintf(arquivoContas, "%s\n%d\n%.2f\n", nomeConta, numeros[i], (float)(rand() % 1000000));
@@ -410,10 +433,10 @@ void gerarDados(int numContas)
     do
     {
         printf("\n1) Gerar melhor caso.");
-        printf("\n2) Gerar caso médio aleatório.");
+        printf("\n2) Gerar caso medio aleatorio.");
         printf("\n3) Gerar pior caso.");
 
-        printf("\nEscolha uma operação: ");
+        printf("\nEscolha uma operacao: ");
 
         scanf("%d", &option);
 
@@ -435,7 +458,7 @@ void gerarDados(int numContas)
             break;
 
         default:
-            printf("\nOperação inválida!\n");
+            printf("\nOperação invalida!\n");
             break;
         }
 
@@ -443,7 +466,6 @@ void gerarDados(int numContas)
 }
 
 // Função principal do programa que controla a interação com o usuário e as operações relacionadas às contas bancárias.
-
 int main()
 {
     int maxContas;
@@ -470,7 +492,7 @@ int main()
 
         if (opcaoArquivo == 2)
         {
-            printf("Informe a quantidade maxima de elementos: ");
+            printf("Informe a quantidade maxima de contas: ");
             scanf("%d", &maxContas);
             fclose(arquivoContas);
 
@@ -481,9 +503,9 @@ int main()
         }
         else
         {
-            // Recupera a quantidade máxima de elementos do arquivo.
+            // Recupera a quantidade máxima de contas do arquivo.
             maxContas = contaLinhas(arquivoContas) / 3;
-            printf("\nQuantidade maxima de elementos: %d\n", maxContas);
+            printf("\nQuantidade maxima de contas: %d\n", maxContas);
             fclose(arquivoContas);
         }
     }
@@ -496,8 +518,8 @@ int main()
 
         do
         {
-            // Solicita ao usuário a quantidade máxima de elementos no banco.
-            printf("Informe a quantidade maxima de elementos: ");
+            // Solicita ao usuário a quantidade máxima de elementos no arquivo.
+            printf("Informe a quantidade maxima de contas: ");
             scanf("%d", &maxContas);
 
             if (maxContas <= 0)
@@ -508,7 +530,7 @@ int main()
         } while (maxContas <= 0);
     }
 
-    // Aloca memória para o array de contas.
+    // Aloca memória para o array de contas, é necessario pois não temos um tamanho fixo do vetor.
     struct Contas *conta = (struct Contas *)malloc(maxContas * sizeof(struct Contas));
 
     if (conta == NULL)
@@ -589,6 +611,6 @@ int main()
 
     } while (op != 6);
 
-    free(conta);
+    free(conta); // Libera a memória alocada para o array de contas.
     return 0;
 }
