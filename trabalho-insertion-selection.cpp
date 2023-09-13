@@ -17,7 +17,7 @@ int menu() /*Essa é a função do menu que será inicializada todas as vezes  a
     int op;
 
     printf("\n1) Adicionar nova conta");
-    printf("\n2) Ler alguma conta");
+    printf("\n2) Ler todas as contas");
     printf("\n3) Ordenar as contas (Selection Sort)");
     printf("\n4) Ordenar as contas (Insertion Sort)");
     printf("\n5) Gerar dados para teste (Isso ira substituir o arquivo atual).");
@@ -102,6 +102,7 @@ void adicionarConta(int maxContas)
     fclose(arquivoContas);
 }
 
+// Esta função lê todas as contas do arquivo e as exibe em uma tabela.
 void lerContas(struct Contas conta[], int numContas)
 {
     FILE *arquivoContas = fopen(NOME_ARQUIVO, "r");
@@ -132,7 +133,7 @@ void lerContas(struct Contas conta[], int numContas)
     fclose(arquivoContas);
 }
 
-// Esta função implementa o algoritmo de ordenação Selection Sort para ordenar um array de contas bancárias com base nos números de conta.
+// Esta função implementa o algoritmo de ordenação Selection Sort para ordenar o vetor de contas bancárias com base no saldo da conta.
 void selectionSort(struct Contas conta[], int numContas)
 {
     printf("\nIniciando Selection Sort\n");
