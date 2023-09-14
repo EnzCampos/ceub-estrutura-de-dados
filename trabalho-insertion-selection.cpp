@@ -117,7 +117,7 @@ void lerContas(struct Contas conta[], int numContas)
 
     // Cabeçalho da tabela
     //  Ele cria três colunas, cada uma com um espaço de largura específico (10, 20 e 10).
-    printf("%-10s%-20s%-10s\n", "Conta", "Nome", "Saldo");
+    printf("%-10s%-20s%-10s\n", "N. Conta", "Nome", "Saldo");
 
     while (fscanf(arquivoContas, "%[^\n]\n%d\n%f\n", conta[i].nome, &conta[i].num, &conta[i].saldo) != EOF)
     {
@@ -336,10 +336,10 @@ void gerarPiorCaso(int numContas)
     for (i = numContas; i > 0; i--)
     {
         char nomeConta[100];
-        sprintf(nomeConta, "Conta %d", i);
+        sprintf(nomeConta, "Conta %d", i + 1);
 
-        // Gera números de conta em ordem decrescente e saldos aleatórios.
-        fprintf(arquivoContas, "%s\n%d\n%.2f\n", nomeConta, i, (float)(rand() % 1000000));
+        // Gera números de conta aleatorios e saldos decrescentes.
+        fprintf(arquivoContas, "%s\n%d\n%.2f\n", nomeConta, ((rand() % 5000) + 1), (float)i * 100);
     }
 
     // Fecha o arquivo após a escrita.
@@ -368,10 +368,10 @@ void gerarMelhorCaso(int numContas)
     for (i = 1; i <= numContas; i++)
     {
         char nomeConta[100];
-        sprintf(nomeConta, "Conta %d", i);
+        sprintf(nomeConta, "Conta %d", i + 1);
 
-        // Gera números de conta sequenciais e saldos aleatórios.
-        fprintf(arquivoContas, "%s\n%d\n%.2f\n", nomeConta, i, (float)(rand() % 1000000));
+        // Gera números de aleátorios e saldos crescentes.
+        fprintf(arquivoContas, "%s\n%d\n%.2f\n", nomeConta, ((rand() % 5000) + 1), (float)i * 100);
     }
 
     // Fecha o arquivo após a escrita.
@@ -397,10 +397,10 @@ void gerarCasoMedioAleatorio(int numContas)
     int i;
     int *numeros = (int *)malloc(numContas * sizeof(int));
 
-    // Preenche um vetor com os números de conta de 1 a numContas.
+    // Preenche um vetor com os números de conta aleatórios entre 1 e 5000.
     for (i = 0; i < numContas; i++)
     {
-        numeros[i] = i + 10000;
+        numeros[i] = rand() % 5000 + 1;
     }
 
     // Embaralha os números de conta aleatoriamente.
@@ -416,14 +416,20 @@ void gerarCasoMedioAleatorio(int numContas)
     for (i = 0; i < numContas; i++)
     {
         char nomeConta[100];
-        sprintf(nomeConta, "Conta %d", numeros[i]); // Gera nomes de conta com base nos números de conta.
+        sprintf(nomeConta, "Conta %d", i + 1); // Gera nomes de conta com base nos números de conta.
 
-        // Gera números de conta, nomes e saldos aleatórios.
-        fprintf(arquivoContas, "%s\n%d\n%.2f\n", nomeConta, numeros[i], (float)(rand() % 1000000));
+        // Gera saldos aleatórios entre 1 e 5000.
+        float saldo = (float)(rand() % 5000 + 1);
+
+        // Escreve os dados no arquivo.
+        fprintf(arquivoContas, "%s\n%d\n%.2f\n", nomeConta, numeros[i], saldo);
     }
 
     // Fecha o arquivo após a escrita.
     fclose(arquivoContas);
+
+    // Libera a memória alocada para o array de números.
+    free(numeros);
 }
 
 // Esta função gera dados com base nas escolhas do usuário para gerar um melhor caso, caso médio aleatório ou pior caso.
