@@ -154,7 +154,7 @@ void selectionSort(struct Contas conta[], int numContas)
 
         for (j = i + 1; j < numContas; j++) // Loop interno a partir do próximo elemento.
         {
-            if (conta[j].num < conta[minIndex].num) // Compara o número da conta.
+            if (conta[j].saldo < conta[minIndex].saldo) // Compara o saldo da conta.
             {
                 minIndex = j; // Atualiza o índice do menor elemento.
             }
@@ -198,7 +198,7 @@ void selectionSort(struct Contas conta[], int numContas)
     }
 }
 
-// Esta função implementa o algoritmo de ordenação Insertion Sort para ordenar um array de contas bancárias com base nos números de conta.
+// Esta função implementa o algoritmo de ordenação Insertion Sort para ordenar um array de contas bancárias com base nos saldos das contas
 void insertionSort(struct Contas conta[], int numContas)
 {
     // Iniciando a ordenação
